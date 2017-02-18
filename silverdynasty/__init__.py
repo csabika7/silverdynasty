@@ -6,38 +6,35 @@ from flask_sslify import SSLify
 from logging import DEBUG, INFO
 import os
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
 app = Flask(__name__)
-app.config['SECRET_KEY'] = b'T\xfdS\xd4\xfa\xf8\xc4\x98u\x11z8\x06\xe3\xe8\xd2\xadJe\xf5\xf4f,\xbb'
 # app.logger.setLevel(DEBUG)
 app.logger.setLevel(INFO)
-
-# configure Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'silver.db')
+app.config['SECRET_KEY'] = b'T\xfdS\xd4\xfa\xf8\xc4\x98u\x11z8\x06\xe3\xe8\xd2\xadJe\xf5\xf4f,\xbb'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://<username>:<password>@' \
 #                                         'csabika7.mysql.pythonanywhere-services.com/csabika7$silver'
 # app.config['SQLALCHEMY_POOL_RECYCLE'] = 240
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'silver.db')
 app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads')
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.mkdir(app.config['UPLOAD_FOLDER'])
+
+# Setup DB connection, create tables
 db = SQLAlchemy(app)
 import silverdynasty.models
-
 db.create_all()
 db.session.commit()
 
 # Configure Authentication
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
-login_manager.init_app(app)
 login_manager.login_view = 'admin.login'
 login_manager.login_message = 'Jelentkezz be, hogy elérhesd ezt az oldalt!'
+login_manager.init_app(app)
 
 # Configure SSL forcing
 # sslify = SSLify(app, permanent=True)
-
 
 # Configure CSRF for ajax
 csrf = CsrfProtect()
