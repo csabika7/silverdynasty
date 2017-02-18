@@ -1,0 +1,56 @@
+{% extends "user_page_base.html" %}
+
+{% block title %}
+Almok
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/blueimp-gallery.min.css')}}">
+{% endblock %}
+
+{% block content %}
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+</div>
+
+{% if litters %}
+{% for litter in litters %}
+<div id="link{{ litter.id }}" class="links">
+    <h1>{{ litter.name }}</h1>
+    <hr>
+    {% for cat in litter.cats %}
+    <a href="{{ url_for('get_image', name=cat.picture) }}" title="{{ cat.name }}"
+        data-description="{{ cat.description }}" >
+        <img src="{{url_for('get_image', name=cat.picture)}}" width="10%" height="10%">
+    </a>
+    {% endfor %}
+
+</div>
+{% endfor %}
+{% endif %}
+
+
+{% endblock %}
+
+{% block bottom %}
+<script src="{{url_for('static', filename='js/blueimp-gallery.min.js')}}"></script>
+{% endblock %}
+
+{% block script %}
+$(".links").click(function (event) {
+    event = event || window.event;
+    var target = event.target || event.srcElement,
+        link = target.src ? target.parentNode : target,
+        options = {
+            index: link, event: event
+        },
+        links = this.getElementsByTagName('a');
+    blueimp.Gallery(links, options);
+});
+{% endblock %}

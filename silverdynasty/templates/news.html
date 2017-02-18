@@ -1,0 +1,27 @@
+{% extends "user_page_base.html" %}
+{% from "macros.html" import datetime_without_millis %}
+
+{% block title %}
+Hírek
+{% endblock %}
+
+{% block content %}
+
+{% if news %}
+{% for news in news %}
+<article id="news{{ news.id }}" >
+    <header>
+        <h1 id="news_title" >{{ news.title }}</h1>
+    </header>
+    <section>
+        <p id="news_content" >{{ news.content|safe }}</p>
+        <p id="news_date" style="text-align: right">{{ datetime_without_millis(news.event_happened) }}</p>
+    </section>
+    <footer>
+        <hr>
+    </footer>
+</article>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

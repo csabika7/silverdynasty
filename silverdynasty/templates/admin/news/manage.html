@@ -1,0 +1,40 @@
+{% extends "admin_page_base.html" %}
+{% from "macros.html" import render_field %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/jquery-te-1.4.0.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/jquery.datetimepicker.min.css')}}">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<h3>{{ title }}:</h3>
+<form id="news_form" action="" method="post">
+    {{ form.hidden_tag() }}
+    <table id="news_table" class="admin_tables">
+        {{ render_field(form.title) }}
+        {{ render_field(form.content) }}
+        {{ render_field(form.event_happened) }}
+    </table>
+    <button id="submit_news" type="submit">Elküldés</button>
+</form>
+{% endblock %}
+
+{% block bottom %}
+<script src="{{url_for('static', filename='js/jquery.datetimepicker.full.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/jquery-te-1.4.0.min.js')}}"></script>
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+$("#content").jqte();
+$.datetimepicker.setLocale('hu');
+$('#event_happened').datetimepicker({
+ format: 'Y-m-d H:i:s',
+ mask:true
+});
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "user_page_base.html" %}
+{% from "macros.html" import datetime_without_millis %}
+
+{% block title %}
+Főoldal
+{% endblock %}
+
+{% block content %}
+<article id="welcome_message">
+    <h3>Üdvözlünk a Silver Dynasty Maine Coon tenyészet honlapján.</h3>
+    <p>MeoWorld.-ben, a cicabirodalomban.</p>
+    <p>A weboldalunk folyamatos fejlődésben van, mint ahogy a cicák minél komfortosabb életének kiépítése is.:)</p>
+    <p>Nézz körül itt a weboldalunkon, vagy a facebook oldalunkon, ott is sok információ és kép vár. :)</p>
+
+    <p>
+        Cicáink törzskönyvezettek (MMME) és a szabad cicáinkat is úgy adjuk tovább a gazdi nevére íratva,
+        a szerződésben meghatározottak szerint (teljes összeg kifizetése után, és ha kedvencnek vitték,
+        akkor az ivartalanítási kötelezettség teljesítse és ennek igazolásának bemutatása)
+    </p>
+    <p>Szülők betegségekre (FIV, FIP, Felv) negatív tesztekkel rendelkeznek</p>
+    <p>A szabad/foglalható cicákról még egy kis információ:</p>
+    <ul>
+        <li>12 hetes kortól elvihetőek</li>
+        <li>Családban, és szeretetben nevelkedő cicusok</li>
+        <li>Törzskönyvet gazdi nevére kiállítottan továbbítom.(az előzőekben írtak szerint)</li>
+        <li>Chippel rendelkeznek</li>
+        <li>Többszörösen féregtelenítve</li>
+        <li>Kötelező oltásokkal /oltási könyvvel/</li>
+        <li>Kölcsönös megegyezés után szerződéssel, számlával költözhetnek új otthonukba</li>
+        <li>Szülők betegségekre szűrt negatív tesztjének másolatával</li>
+        <li>Amennyiben a cicának minősítése is van, akkor a minősítésének másolatával együtt</li>
+        <li>Cicával kapcsolatos kérdésekre, a továbbiakban is szívesen válaszolok</li>
+    </ul>
+    <p>Vannak még <a href="{{ url_for('kittens') }}">SZABAD CICÁINK!</a> :)</p>
+    <p>
+        Azon gondolkozol, melyik cica illene hozzád?
+        Ehhez vagy további kérdések felmerülése esetén, nyugodtan kérdezz.
+        Vedd fel velem a kapcsolatot a számodra megfelelő módon!
+    </p>
+    <a href="{{ url_for('contact') }}">KAPCSOLATOK</a>
+    <a href="{{ url_for('contact') }}"><img src="{{ url_for('static', filename='img/email.png') }}" ></a>
+    <a href="{{ url_for('contact') }}"><img src="{{ url_for('static', filename='img/messenger.png') }}" ></a>
+    <a href="{{ url_for('contact') }}"><img src="{{ url_for('static', filename='img/facebook.png') }}" ></a>
+    <a href="{{ url_for('contact') }}"><img src="{{ url_for('static', filename='img/phone.png') }}" ></a>
+</article>
+
+{% endblock %}
+
+{% block sidebar %}
+<aside id="recent_news">
+    <h2>Legfrissebb hír</h2>
+    <hr>
+    {% if latest_news %}
+    <h3 id="news_title">{{ latest_news.title }}</h3>
+    <p id="new_content">{{ latest_news.content|safe }}</p>
+    <hr>
+    <p id="news_date" style="text-align: right;font-size: 14px">{{ datetime_without_millis(latest_news.posted) }}</p>
+    {% else %}
+    <p id="no_news_yet">Még nem érkezett hír!</p>
+    {% endif %}
+</aside>
+{% endblock %}

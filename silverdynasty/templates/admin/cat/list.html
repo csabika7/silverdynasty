@@ -1,0 +1,64 @@
+{% extends "admin_page_base.html" %}
+
+{% block title %}
+Cicák
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/datatables.min.css')}}">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<form method="GET" action="{{ url_for('cat.add_cat') }}">
+    <div>
+        <h1>Cicák:</h1>
+        <input style="margin-bottom: 0.5em" type="submit" value="Új cica hozzáadása">
+    </div>
+</form>
+<table id="cat_table">
+    <thead>
+    <td>Név</td>
+    <td>Szín</td>
+    <td>Színkód</td>
+    <td>Születési dátum</td>
+    <td>Nem</td>
+    <td>Alom</td>
+    <td>Eladási állapot</td>
+    <td>Leírás</td>
+    <td></td>
+    </thead>
+    {% if cats %}
+    {% for cat in cats %}
+    <tr>
+        <td>{{ cat.name }}</td>
+        <td>{{ cat.color }}</td>
+        <td>{{ cat.color_code }}</td>
+        <td>{{ cat.birth }}</td>
+        <td>{{ cat.gender_name }}</td>
+        <td>{{ cat.litter.name }}</td>
+        <td>{{ cat.status_name }}</td>
+        <td>{{ cat.description|safe|truncate(20) }}</td>
+        <td>
+            <form method="GET" action="{{ url_for('cat.edit_cat', cat_id=cat.id) }}">
+                <input type="submit" value="Szerkesztés">
+            </form>
+        </td>
+
+    </tr>
+    {% endfor %}
+    {% endif %}
+</table>
+
+{% endblock %}
+
+{% block bottom %}
+<script src="{{url_for('static', filename='js/datatables.min.js')}}"></script>
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+$(document).ready(function(){
+$('#cat_table').DataTable();
+});
+{% endblock %}

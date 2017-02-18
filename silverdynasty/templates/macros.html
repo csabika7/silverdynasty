@@ -1,0 +1,48 @@
+{% macro cat_status(cat) %}
+
+{% if cat.is_reserved() %}
+<p class="cat_status" style="color: red">{{ cat.status_name }}</p>
+{% elif cat.is_available() %}
+<p class="cat_status" style="color: green">{{ cat.status_name }}</p>
+{% else %}
+<p class="cat_status">{{ cat.status_name }}</p>
+{% endif %}
+
+{% endmacro %}
+
+{% macro render_field_without_error_column(field, label_endmark=':') %}
+<tr {% if field.errors %} class="error" {% endif %}>
+    {{ label_column(field, label_endmark) }}
+    <td>
+        {{ field(**kwargs)|safe }}
+    </td>
+</tr>
+{% endmacro %}
+
+{% macro render_field(field, label_endmark=':') %}
+<tr {% if field.errors %} class="error" {% endif %}>
+    {{ label_column(field, label_endmark) }}
+    <td>
+        {{ field(**kwargs)|safe }}
+    </td>
+    {{ errors_column(field) }}
+</tr>
+{% endmacro %}
+
+{% macro label_column(field, label_endmark=':') %}
+<td>{{ field.label }}{{ label_endmark }}</td>
+{% endmacro %}
+
+{% macro errors_column(field) %}
+<td>
+    <ul>
+        {% for error in field.errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</td>
+{% endmacro %}
+
+{% macro datetime_without_millis(datetime) %}
+{{ datetime.strftime('%Y-%m-%d %H:%M:%S') }}
+{% endmacro %}

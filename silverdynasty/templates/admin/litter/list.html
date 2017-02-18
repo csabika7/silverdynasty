@@ -1,0 +1,103 @@
+{% extends "admin_page_base.html" %}
+
+{% block title %}
+Almok
+{% endblock %}
+
+{% block head %}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/datatables.min.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/jqueryui-editable.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/jquery-ui.min.css')}}">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<h1>Almok:</h1>
+<form id="add_litter_form" action="" method="POST">
+    {{ add_form.hidden_tag() }}
+    <table id="manage_litter_table">
+        <tr {% if add_form.name.errors %} class="error" {% endif %}>
+            <td>
+                {{ add_form.name }}
+            </td>
+            <td>
+                <input type="submit" value="Új alom">
+            </td>
+            <td>
+                <ul>
+                    {% for error in add_form.name.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+</form>
+<form id="edit_litter_form" action="" method="POST">
+    <table id="litter_table">
+        <thead>
+        <td>Alom neve</td>
+        <td>Cicák</td>
+        <td></td>
+        </thead>
+        {% if litters %}
+        {% for litter in litters %}
+        <tr>
+            <td>
+                <a id="litter{{ litter.id }}" href="#" class="litter_name"
+                   data-name="name" data-pk="{{ litter.id }}"
+                   data-url="{{ url_for('litter.edit_litter', litter_id=litter.id) }}">
+                    {{ litter.name }}
+                </a>
+            </td>
+            <td>
+                {% if litter.cats %}
+                {% for cat in litter.cats %}
+                <a id="cat{{ cat.id }}" href="{{ url_for('cat.edit_cat', cat_id=cat.id) }}">{{ cat.name }}</a>
+                {% endfor %}
+                {% endif %}
+            </td>
+            <td>
+                <form method="GET" action="{{ url_for('cat.add_cat') }}">
+                    <input type="submit" value="Cica hozzáadása">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </table>
+</form>
+{% endblock %}
+
+{% block bottom %}
+<script src="{{url_for('static', filename='js/datatables.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/jquery-ui.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/jqueryui-editable.min.js')}}"></script>
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+var csrftoken = $('meta[name=csrf-token]').attr('content')
+$.fn.editable.defaults.mode = 'inline';
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken)
+        }
+    }
+});
+
+$(document).ready(function() {
+    $('.litter_name').editable({
+        send: 'always',
+        success: function(response, newValue) {
+            show_message(response[0], response[1]);
+        }
+    });
+});
+
+$(document).ready(function(){
+$('#litter_table').DataTable();
+});
+{% endblock %}

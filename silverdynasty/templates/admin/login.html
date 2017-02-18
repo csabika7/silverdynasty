@@ -1,0 +1,42 @@
+{% extends "admin_page_base.html" %}
+
+{% block title %}
+Bejelentkezés
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<section>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <table>
+            <tr>
+                <td>
+                    Email:
+                </td>
+                <td>
+                    {{ form.email }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Jelszó:
+                </td>
+                <td>
+                    {{ form.password }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Maradj bejelentkezve:
+                </td>
+                <td>
+                    {{ form.remember_me }}
+                </td>
+            </tr>
+        </table>
+        <button id="login" type="submit">Bejelentkezés</button>
+    </form>
+</section>
+{% endblock %}
+

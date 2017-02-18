@@ -1,0 +1,91 @@
+{% extends "user_page_base.html" %}
+{% from "macros.html" import cat_status, render_field_without_error_column %}
+
+
+{% block title %}
+Szabad kiscicák
+{% endblock %}
+
+{% block content %}
+
+<div id="pre-reservation" >
+    <h4>Előjegyzés</h4>
+    <div>
+        <p>Következő alom érkezése után értesítést küldünk önnek!</p>
+        <form id="wish_form" action="" method="post">
+            {{ form.hidden_tag() }}
+            <table id="wish_table" class="data_table">
+                {{ render_field_without_error_column(form.name) }}
+                {{ render_field_without_error_column(form.email) }}
+                {{ render_field_without_error_column(form.details, label_endmark='') }}
+            </table>
+            <button id="submit_wish" type="submit">Elküldés</button>
+        </form>
+    </div>
+</div>
+
+{% if kittens %}
+<div>
+    {% for kitten in kittens %}
+    <article id="kitten{{ kitten.id }}">
+        <header>
+            <hr>
+            <h3>Silver Dynasty {{ kitten.name }}</h3>
+        </header>
+        <section>
+            <img class="list" src="{{ url_for('get_image', name=kitten.picture) }}">
+            <p>Színezet: {{ kitten.color }}</p>
+            <p>Színkód: {{ kitten.color_code }}</p>
+            <p>Születési dátum: {{ kitten.birth }}</p>
+            <p>Neme: {{ kitten.gender_name }}</p>
+            <p>Alom: {{ kitten.litter.name }}</p>
+            {{ cat_status(kitten) }}
+            Leírás:<br>
+            {{ kitten.description|safe }}
+        </section>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div>
+    <article>
+        <hr>
+        <p id="no_kitten_for_sale">Jelenleg nincs eladó kiscicánk!</p>
+    </article>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+var csrftoken = $('#csrf_token').val();
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+    }
+}
+});
+
+$(document).ready(function() {
+    $('#wish_form').submit(function (event) {
+        $.post("{{ url_for('wish') }}", $('#wish_form').serialize())
+            .fail(function (xhr) {
+                show_messages(xhr.responseJSON);
+            }).done(function (msgs) {
+                show_messages(msgs);
+                $("#wish_form :input").val('');
+            });
+        event.preventDefault();
+    });
+    $( "#pre-reservation" ).accordion({
+        active: false,
+        collapsible: true,
+        icons: {
+            header: "ui-icon-blank",
+            activeHeader: "ui-icon-heart"
+        }
+    });
+});
+{% endblock %}

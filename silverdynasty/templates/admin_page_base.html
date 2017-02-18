@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block nav %}
+<li><a href="{{ url_for('cat.list_cats') }}">Cicák</a></li>
+<li><a href="{{ url_for('litter.list_litters') }}">Almok</a></li>
+<li><a href="{{ url_for('news.list_news') }}">Hírek</a></li>
+{% if current_user.is_authenticated %}
+<li><a href="{{ url_for('admin.logout') }}">Kijelentkezés</a></li>
+{% endif %}
+
+{% endblock %}
+
+{% block script %}
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        var msgs = {{ messages | tojson | safe}};
+        for (i = 0; i < msgs.length; i++) {
+            show_message(msgs[i][0], msgs[i][1]);
+        }
+    {% endif %}
+{% endwith %}
+{% endblock %}

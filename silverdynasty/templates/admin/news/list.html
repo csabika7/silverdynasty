@@ -1,0 +1,59 @@
+{% extends "admin_page_base.html" %}
+{% from "macros.html" import datetime_without_millis %}
+
+{% block title %}
+Hírek
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/datatables.min.css')}}">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<form method="GET" action="{{ url_for('news.add_news') }}">
+    <div>
+        <h1>Bejegyzések:</h1>
+        <input style="margin-bottom: 0.5em" type="submit" value="Új bejegyzés hozzáadása">
+    </div>
+</form>
+<table id="news_table">
+    <thead>
+    <td>Cím</td>
+    <td>Tartalom</td>
+    <td>Feltöltés ideje</td>
+    <td>Utolsó módosítás ideje</td>
+    <td>Esemény ideje</td>
+    <td></td>
+    </thead>
+    {% if news %}
+    {% for news in news %}
+    <tr>
+        <td>{{ news.title }}</td>
+        <td>{{ news.content|safe|truncate(20) }}</td>
+        <td>{{ datetime_without_millis(news.posted) }}</td>
+        <td>{{ datetime_without_millis(news.last_edited) }}</td>
+        <td>{{ datetime_without_millis(news.event_happened) }}</td>
+        <td>
+            <form method="GET" action="{{ url_for('news.edit_news', news_id=news.id) }}">
+                <input type="submit" value="Szerkesztés">
+            </form>
+        </td>
+
+    </tr>
+    {% endfor %}
+    {% endif %}
+</table>
+
+{% endblock %}
+
+{% block bottom %}
+<script src="{{url_for('static', filename='js/datatables.min.js')}}"></script>
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+$(document).ready(function(){
+$('#news_table').DataTable();
+});
+{% endblock %}

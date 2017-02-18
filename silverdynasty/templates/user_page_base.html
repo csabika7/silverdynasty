@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block nav %}
+<li><a href="{{ url_for('index') }}">Főoldal</a></li>
+<li><a href="{{ url_for('news') }}">Hírek</a></li>
+<li><a href="{{ url_for('cats') }}">Szülők</a></li>
+<li><a href="{{ url_for('litters') }}">Almok</a></li>
+<li><a href="{{ url_for('kittens') }}">Eladó cicák</a></li>
+<li><a href="{{ url_for('contact') }}">Kapcsolat</a></li>
+{% endblock %}

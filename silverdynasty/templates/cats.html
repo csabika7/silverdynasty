@@ -1,0 +1,32 @@
+{% extends "user_page_base.html" %}
+
+{% block title %}
+Szülő cicák
+{% endblock %}
+
+{% block content %}
+
+{% if cats %}
+
+{% for cat in cats %}
+<article id="cat{{ cat.id }}">
+    <header>
+        <h3>{{ cat.name }}</h3>
+    </header>
+    <section>
+        <img class="list" src="{{ url_for('get_image', name=cat.picture) }}">
+        <p>Színezet: {{ cat.color }}</p>
+        <p>Színkód: {{ cat.color_code }}</p>
+        <p>Születési dátum: {{ cat.birth }}</p>
+        <p>Neme: {{ cat.gender_name }}</p>
+        Leírás:<br>
+        {{ cat.description|safe }}
+    </section>
+    <footer>
+        <hr>
+    </footer>
+</article>
+{% endfor %}
+{% endif %}
+
+{% endblock %}
