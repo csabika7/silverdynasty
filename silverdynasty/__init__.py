@@ -3,14 +3,15 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CsrfProtect
 from flask_sslify import SSLify
-from logging import DEBUG
+from logging import DEBUG, INFO
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = b'T\xfdS\xd4\xfa\xf8\xc4\x98u\x11z8\x06\xe3\xe8\xd2\xadJe\xf5\xf4f,\xbb'
-app.logger.setLevel(DEBUG)
+# app.logger.setLevel(DEBUG)
+app.logger.setLevel(INFO)
 
 # configure Database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'silver.db')
