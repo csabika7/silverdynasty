@@ -7,15 +7,18 @@ Hírek
 
 {% block content %}
 
-{% if news %}
-{% for news in news %}
+{% if news_items %}
+{% for news in news_items %}
 <article id="news{{ news.id }}" >
     <header>
         <h1 id="news_title" >{{ news.title }}</h1>
     </header>
     <section>
-        <p id="news_content" >{{ news.content|safe }}</p>
-        <p id="news_date" style="text-align: right">{{ datetime_without_millis(news.event_happened) }}</p>
+        {% if news.picture %}
+        <img id="news_img{{ news.id }}" src="{{ url_for('get_image', name=news.picture) }}" class="news_img">
+        {% endif %}
+        <p id="news_content" class="news_text" >{{ news.content|safe }}</p>
+        <p id="news_date" style="text-align: right; clear: both;">{{ datetime_without_millis(news.event_happened) }}</p>
     </section>
     <footer>
         <hr>

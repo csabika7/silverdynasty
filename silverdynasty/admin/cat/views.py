@@ -1,11 +1,10 @@
 from . import cat
-from silverdynasty import db, app
+from silverdynasty import db
 from silverdynasty.models import Cat
 from silverdynasty.admin.cat.forms import CatForm
 from flask import flash, render_template, redirect, url_for
 from flask_login import login_required
-from werkzeug.utils import secure_filename
-import os
+from silverdynasty.util import save_file_field
 
 
 @cat.route('/list')
@@ -22,9 +21,11 @@ def edit_cat(cat_id):
     if not form.picture.has_file():
         form.picture.data = cat_item.picture
     if form.validate_on_submit():
+        if form.litter.data.id is None:
+            form.litter.data = None
         form.populate_obj(cat_item)
         if form.picture.has_file():
-            cat_item.picture = save_picture(form.picture)
+            cat_item.picture = save_file_field(form.picture)
         db.session.commit()
         flash('A bejegyzés elmentve!', category='info')
         return redirect(url_for('.list_cats'))
@@ -54,14 +55,8 @@ def add_cat():
 
 
 def create_cat(name, color, color_code, birth, picture, gender, litter, status, description):
-    picture_name = save_picture(picture)
+    picture_name = save_file_field(picture)
     new_cat = Cat(name=name, color=color, color_code=color_code, picture=picture_name,
                   birth=birth, gender=gender, description=description, litter_id=litter, status=status)
     db.session.add(new_cat)
     db.session.commit()
-
-
-def save_picture(field):
-    picture_name = secure_filename(field.data.filename)
-    field.data.save(os.path.join(app.config['UPLOAD_FOLDER'], picture_name))
-    return picture_name

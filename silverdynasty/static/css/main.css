@@ -162,6 +162,14 @@ nav a:hover {
    ========================================================================== */
 
 @media only screen and (min-width: 480px) {
+
+    .news_img {
+        width: 50%;
+        float: left;
+        box-shadow: 0px 0px 5px grey;
+        margin-right: 1em;
+    }
+
     nav a {
         float: left;
         width: auto;
@@ -446,4 +454,10 @@ p.cat_status {
 
 .data_table input, .data_table textarea {
     width: 100%
+}
+
+.news_text {
+    display: inline;
+    word-wrap: break-word;
+    overflow: auto;
 }

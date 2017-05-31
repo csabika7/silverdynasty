@@ -52,9 +52,9 @@ Főoldal
     <hr>
     {% if latest_news %}
     <h3 id="news_title">{{ latest_news.title }}</h3>
-    <p id="new_content">{{ latest_news.content|safe }}</p>
+    <p id="news_content" class="news_text" >{{ latest_news.content|safe }}</p>
     <hr>
-    <p id="news_date" style="text-align: right;font-size: 14px">{{ datetime_without_millis(latest_news.posted) }}</p>
+    <p id="news_date" style="text-align: right;font-size: 14px">{{ datetime_without_millis(latest_news.event_happened) }}</p>
     {% else %}
     <p id="no_news_yet">Még nem érkezett hír!</p>
     {% endif %}

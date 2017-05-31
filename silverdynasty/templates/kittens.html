@@ -11,7 +11,7 @@ Szabad kiscicák
 <div id="pre-reservation" >
     <h4>Előjegyzés</h4>
     <div>
-        <p>Következő alom érkezése után értesítést küldünk önnek!</p>
+        <p>Következő alom érkezése után értesítést küldünk neked!</p>
         <form id="wish_form" action="" method="post">
             {{ form.hidden_tag() }}
             <table id="wish_table" class="data_table">
@@ -80,10 +80,10 @@ $(document).ready(function() {
         event.preventDefault();
     });
     $( "#pre-reservation" ).accordion({
-        active: false,
+        {% if kittens %}active: false,{% endif %}
         collapsible: true,
         icons: {
-            header: "ui-icon-blank",
+            header: "ui-icon-triangle-1-e",
             activeHeader: "ui-icon-heart"
         }
     });

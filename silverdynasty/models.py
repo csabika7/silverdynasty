@@ -9,6 +9,7 @@ class News(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
     content = db.Column(db.Text)
+    picture = db.Column(db.String(120))
     posted = db.Column(db.DateTime, default=datetime.utcnow)
     last_edited = db.Column(db.DateTime, default=datetime.utcnow)
     event_happened = db.Column(db.DateTime, default=datetime.utcnow)
@@ -22,8 +23,11 @@ class News(db.Model):
         return News.query.order_by(desc(News.event_happened)).all()
 
     def __repr__(self):
-        return '<News id="%d", title="%s", content="%s", posted="%s", last edited="%s">' \
-               % (self.id, str(self.title), str(self.content), str(self.posted), str(self.last_edited))
+        return '<News id="{}", title="{}", content="{}", posted="{}", last edited="{}">'.format(self.id,
+                                                                                                str(self.title),
+                                                                                                str(self.content),
+                                                                                                str(self.posted),
+                                                                                                str(self.last_edited))
 
 
 class Cat(db.Model):
@@ -57,6 +61,10 @@ class Cat(db.Model):
     def gender_name(self):
         return self.GENDERS[self.gender]
 
+    @property
+    def litter_name(self):
+        return "Szülő" if self.litter_id is None else self.litter.name
+
     def is_available(self):
         return self.status == Cat.AVAILABLE
 
@@ -70,16 +78,20 @@ class Cat(db.Model):
         return Cat.query.filter(Cat.status == Cat.NOT_SALABLE).all()
 
     def __repr__(self):
-        return '<News id="%d" name="%s", picture="%s", color="%s", color code="%s",' \
-               ' birth="%s", gender="%s", description="%s">' \
-               % (self.id, str(self.name), str(self.picture), str(self.color), str(self.color_code),
-                  str(self.birth), str(self.gender), str(self.description))
+        return '<Cat id="{}" name="{}", picture="{}", color="{}", color code="{}",' \
+               ' birth="{}", gender="{}", description="{}">'.format(self.id, str(self.name), str(self.picture),
+                                                                    str(self.color), str(self.color_code),
+                                                                    str(self.birth), str(self.gender),
+                                                                    str(self.description))
 
 
 class Litter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
     cats = db.relationship('Cat', backref='litter', lazy='dynamic')
+
+    def __repr__(self):
+        return 'Litter < id="{}", name="{}">'.format(self.id, self.name)
 
 
 class User(db.Model, UserMixin):
@@ -101,8 +113,9 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return 'User < id="%d", first name="%s", last name="%s", email="%s">' % (self.id, str(self.firstName),
-                                                                                 str(self.lastName), str(self.email))
+        return 'User < id="{}", first name="{}", last name="{}", email="{}">'.format(self.id, str(self.firstName),
+                                                                                     str(self.lastName),
+                                                                                     str(self.email))
 
 
 class Wish(db.Model):

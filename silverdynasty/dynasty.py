@@ -12,7 +12,7 @@ def index():
 
 @app.route('/news')
 def news():
-    return render_template('news.html', news=News.news_feed())
+    return render_template('news.html', news_items=News.news_feed())
 
 
 @app.route('/cats')

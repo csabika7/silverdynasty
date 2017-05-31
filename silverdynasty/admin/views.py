@@ -3,7 +3,7 @@ from silverdynasty import login_manager
 from silverdynasty.models import User
 from silverdynasty.admin.forms import UserForm
 from flask import flash, render_template, url_for, redirect, request
-from flask_login import logout_user, login_user
+from flask_login import logout_user, login_user, current_user
 
 
 @login_manager.user_loader
@@ -14,6 +14,8 @@ def load_user(user_id):
 @admin.route('/', methods=['GET', 'POST'])
 @admin.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('cat.list_cats'))
     form = UserForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()

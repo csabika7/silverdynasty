@@ -5,6 +5,7 @@ from silverdynasty.models import News
 from flask import flash, render_template, redirect, url_for
 from flask_login import login_required
 from datetime import datetime
+from silverdynasty.util import save_file_field
 
 
 @news.route('/list')
@@ -18,9 +19,13 @@ def list_news():
 def edit_news(news_id):
     news_item = News.query.get_or_404(news_id)
     form = NewsForm(obj=news_item)
+    if not form.picture.has_file():
+        form.picture.data = news_item.picture
     if form.validate_on_submit():
         news_item.last_edited = datetime.utcnow()
         form.populate_obj(news_item)
+        if form.picture.has_file():
+            news_item.picture = save_file_field(form.picture)
         db.session.commit()
         flash('A bejegyzés elmentve!', category='info')
         return redirect(url_for('.list_news'))
@@ -35,7 +40,8 @@ def add_news():
         title = form.title.data
         content = form.content.data
         event = form.event_happened.data
-        db.session.add(News(title=title, content=content, event_happened=event))
+        pic_path = save_file_field(form.picture)
+        db.session.add(News(title=title, picture=pic_path, content=content, event_happened=event))
         db.session.commit()
         flash('Bejegyzés elküldve: "{}"'.format(title), category='info')
         return redirect(url_for('.add_news'))
